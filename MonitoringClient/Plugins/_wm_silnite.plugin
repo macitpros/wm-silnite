@@ -64,28 +64,38 @@ else
 XPRESULT="XProtect is up-to-date"
 fi
 
+## SIP
+SIPVALUE=$(echo "${SILNITE}" | grep SIP | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+## XProtect
+XPVALUE=$(echo "${SILNITE}" | grep XPro\ \= | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+
+# SIP status for dashboard.
+if [[ "$SIPVALUE" == 1 ]]; then
+SIPSTATUS="SIP and is enabled (woohoo)"
+else
+SIPSTATUS="SIP is disabled (boohoo)"
+fi
+
+# XProtect status for dashboard.
+if [[ "$XPVALUE" == 1 ]]; then
+XPSTATUS="XProtect is enabled (yah)"
+else
+XPSTATUS="XProtect is disabled (boo)"
+fi
+
+if [[ "$XPVALUE" != 1 ]] || [[ "$SIPVALUE" != 1 ]]; then
+echo "SIP or XProtect is disabled!\n$XPSTATUS\n$SIPSTATUS"
+exit 200
+fi
+
+# All good, nothing to see here.
+if [[ "$UPDATESWAITING" == *"UpdateWaiting = 0"* ]]; then
+echo "All looks good. No pending updates. Plus...\n$XPSTATUS\n$SIPSTATUS"
+exit 0
+fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
 echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT"
 exit 2
-
-## SIP
-# Finds if SIP is enabled. If disabled a one-time alert is sent.
-SIPVALUE=$(echo "${SILNITE}" | grep SIP | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
-elif [[ $SIPVALUE == "0" ]]; then
-SIPSTATUS="SIP is NOT enabled"
-exit 200
-
-## XProtect
-# Finds if XProtect is enabled. If disabled a one-time alert is sent.
-XPVALUE=$(echo "${SILNITE}" | grep XPro | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
-elif [[ $XPVALUE == "0" ]]; then
-XPSTATUS="XProtect is NOT enabled"
-exit 200
-
-# All good, nothing to see here.
-else
-echo "Nothing to report... all looks good. No pending updates and\n\n$SIPSTATUS\n\n$XPSTATUS"
-exit 0
 fi
