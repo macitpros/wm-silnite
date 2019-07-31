@@ -10,14 +10,14 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
 
-## As of version .01:
+## As of version .02:
 
 **Emails daily/ticket created (exit 2) if...**
 * MRT is out of date
 * Gatekeeper is out of date
 * XProtect is out of date
 
-**(still needs testing, code is there) Sends one-time alerts (exit 200) if...**
+**(initial testing complete, still needs more testing) Sends one-time alerts (exit 200) if...**
 * SIP Disabled
 * XProtect Disabled
 
