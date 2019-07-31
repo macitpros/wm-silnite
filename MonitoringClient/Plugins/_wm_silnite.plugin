@@ -1,0 +1,91 @@
+#!/bin/sh
+
+# PLUGIN: WM silnite
+# AUTHOR: DAN MONGE @MACITPROS
+# DATE:   JULY/31/2019
+
+# Takes a bit of time to run. Only run once per day?
+# Emails daily (exit 2) for:
+# * MRT is out of date
+# * Gatekeeper is out of date
+# * XProtect is out of date
+#
+# Sends one-time alerts (exit 200) for:
+# * SIP Disabled
+# * XProtect Disabled
+
+# Check if silnite is installed. If it is not, exit without running
+if [ ! -f /usr/local/bin/silnite ]; then
+    exit 25
+fi
+
+# Runs silnite as xml and gets the information to set as a variable
+SILNITE="$(/usr/local/bin/silnite ax)"
+
+# Runs silnite as text output.
+# SILNITETEXT="$(/usr/local/bin/silnite a)"
+
+# Finds if there are updates waiting.
+UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
+
+## Malware Removal Tool
+# Finds MRT Version installed
+MRTVERSION=$(echo "${SILNITE}" | grep MRTV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+# Finds MRT Version available to update too.
+MRTAVIL=$(echo "${SILNITE}" | grep MRTE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+# Checks is MRT is out of date
+if [ "$MRTVERSION" != "$MRTAVIL" ]; then
+MRTRESULT="MRT is out-of-date!\nCurrent version is $MRTVERSION\nAvailable version is $MRTAVIL"
+else
+MRTRESULT="MRT is up-to-date"
+fi
+
+## Gatekeeper
+# Finds Gatekeeper Version installed
+GKVERSION=$(echo "${SILNITE}" | grep GatekeeperV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+# Finds Gatekeeper Version available to update too.
+GKAVIL=$(echo "${SILNITE}" | grep GatekeeperE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+# Checks is Gatekeeper is out of date
+if [ "$GKVERSION" != "$GKAVIL" ]; then
+GKRESULT="Gatekeeper is out-of-date!\nCurrent version is $GKVERSION\nAvailable version is $GKAVIL"
+else
+GKRESULT="Gatekeeper is up-to-date"
+fi
+
+## XProtect
+# Finds XProtect Version installed
+XPVERSION=$(echo "${SILNITE}" | grep XProtectV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+# Finds XProtect Version available to update too.
+XPAVIL=$(echo "${SILNITE}" | grep XProtectE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+# Checks if XProtect is out of date
+if [ "$XPVERSION" != "$XPAVIL" ]; then
+XPRESULT="XProtect is out-of-date!\nCurrent version is $XPVERSION\nAvailable version is $XPAVIL"
+else
+XPRESULT="XProtect is up-to-date"
+fi
+
+
+# Updates available - Warn if any updates are available
+if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
+echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT"
+exit 2
+
+## SIP
+# Finds if SIP is enabled. If disabled a one-time alert is sent.
+SIPVALUE=$(echo "${SILNITE}" | grep SIP | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+elif [[ $SIPVALUE == "0" ]]; then
+SIPSTATUS="SIP is NOT enabled"
+exit 200
+
+## XProtect
+# Finds if XProtect is enabled. If disabled a one-time alert is sent.
+XPVALUE=$(echo "${SILNITE}" | grep XPro | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+elif [[ $XPVALUE == "0" ]]; then
+XPSTATUS="XProtect is NOT enabled"
+exit 200
+
+# All good, nothing to see here.
+else
+echo "Nothing to report... all looks good. No pending updates and\n\n$SIPSTATUS\n\n$XPSTATUS"
+exit 0
+fi
