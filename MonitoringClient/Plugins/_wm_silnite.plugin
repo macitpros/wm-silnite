@@ -71,7 +71,7 @@ XPVALUE=$(echo "${SILNITE}" | grep XPro\ \= | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
 
 # SIP status for dashboard.
 if [[ "$SIPVALUE" == 1 ]]; then
-SIPSTATUS="SIP and is enabled (woohoo)"
+SIPSTATUS="SIP is enabled (woohoo)"
 else
 SIPSTATUS="SIP is disabled (boohoo)"
 fi
