@@ -30,7 +30,7 @@ UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
 
 ## Malware Removal Tool
 # Finds MRT Version installed
-MRTVERSION=$(echo "${SILNITE}" | grep MRTV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+MRTVERSION=$(echo "${SILNITE}" | grep MRTVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Finds MRT Version available to update too.
 MRTAVIL=$(echo "${SILNITE}" | grep MRTE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Checks is MRT is out of date
