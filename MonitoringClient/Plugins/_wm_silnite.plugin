@@ -5,10 +5,16 @@
 # DATE:   JULY/31/2019
 
 # Takes a bit of time to run. Only run once per day?
-# Emails daily (exit 2) for:
+# Emails daily (exit 2) for updates available. Displays if:
 # * MRT is out of date
 # * Gatekeeper is out of date
 # * XProtect is out of date
+#
+# If unable to check for updates, shows informational warning (exit 20),
+# along with installed versions of
+# * MRT, 
+# * Gatekeeper
+# * XProtect
 #
 # Sends one-time alerts (exit 200) for:
 # * SIP Disabled
@@ -22,8 +28,8 @@ fi
 # Runs silnite as xml and gets the information to set as a variable
 SILNITE="$(/usr/local/bin/silnite ax)"
 
-# Runs silnite as text output.
-# SILNITETEXT="$(/usr/local/bin/silnite a)"
+# Runs silnite without checking for updates (for testing).
+#SILNITE="$(/usr/local/bin/silnite bmx)"
 
 # Finds if there are updates waiting.
 UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
@@ -88,6 +94,12 @@ echo "SIP or XProtect is disabled!\n$XPSTATUS\n$SIPSTATUS"
 exit 200
 fi
 
+## Unable to check for updates. silnite will revert to just reporting currently installed versions, which is what this plugin will do. Shows as an informational warning.
+if [[ -z "$MRTAVIL" ]] && [[ -z "$GKAVIL" ]] && [[ -z "$XPAVIL" ]]; then
+echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTVERSION\nGatekeeper Version: $GKVERSION\nXProtect Version: $XPVERSION"
+exit 20
+fi
+
 # All good, nothing to see here.
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 0"* ]]; then
 echo "All looks good. No pending updates. Plus...\n$XPSTATUS\n$SIPSTATUS"
@@ -96,6 +108,6 @@ fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT"
+echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\nRunning\nsilnite axu\nfrom the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates"
 exit 2
 fi
