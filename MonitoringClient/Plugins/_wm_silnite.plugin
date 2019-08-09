@@ -26,7 +26,8 @@ if [ ! -f /usr/local/bin/silnite ]; then
 fi
 
 # Runs silnite as xml and gets the information to set as a variable
-SILNITE="$(/usr/local/bin/silnite ax)"
+# sed added to remove errors code when running behind an ssl proxy
+SILNITE="$(/usr/local/bin/silnite ax | sed -n '/App Transport Security has blocked a cleartext/q;p')"
 
 # Runs silnite without checking for updates (for testing).
 #SILNITE="$(/usr/local/bin/silnite bmx)"
