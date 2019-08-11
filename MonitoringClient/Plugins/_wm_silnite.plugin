@@ -29,6 +29,13 @@ fi
 # sed added to remove errors code when running behind an ssl proxy
 SILNITE="$(/usr/local/bin/silnite ax)"
 
+# If output of above is running behind an ssl proxy, silnite will
+# run in 'report only' (bmx) mode and output information.
+# Needs more testing. Commented out for now
+#if [[ "$SILNITE" == *"App Transport Security has blocked a cleartext"* ]]; then
+#SILNITE="$(/usr/local/bin/silnite bmx)"
+#fi
+
 # Runs silnite without checking for updates (for testing).
 #SILNITE="$(/usr/local/bin/silnite bmx)"
 
@@ -40,7 +47,7 @@ UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
 MRTVERSION=$(echo "${SILNITE}" | grep MRTV\ \= | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Finds MRT Version available to update too.
 MRTAVIL=$(echo "${SILNITE}" | grep MRTE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
-# Fallback if silnite is unable to check for updates
+# Fallback if silnite was unable to check for updates
 MRTCURRENT=$(echo "${SILNITE}" | grep MRTVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Checks is MRT is out of date
 if [ "$MRTVERSION" != "$MRTAVIL" ]; then
@@ -54,7 +61,7 @@ fi
 GKVERSION=$(echo "${SILNITE}" | grep GatekeeperV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Finds Gatekeeper Version available to update too.
 GKAVIL=$(echo "${SILNITE}" | grep GatekeeperE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
-# Fallback If silnite is unable to check for updates
+# Fallback If silnite was unable to check for updates
 GKCURRENT=$(echo "${SILNITE}" | grep GateVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Checks is Gatekeeper is out of date
 if [ "$GKVERSION" != "$GKAVIL" ]; then
@@ -68,7 +75,7 @@ fi
 XPVERSION=$(echo "${SILNITE}" | grep XProtectV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Finds XProtect Version available to update too.
 XPAVIL=$(echo "${SILNITE}" | grep XProtectE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
-# Fallback if silnite is unable to check for updates
+# Fallback if silnite was unable to check for updates
 XPCURRENT=$(echo "${SILNITE}" | grep XproVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Checks if XProtect is out of date
 if [ "$XPVERSION" != "$XPAVIL" ]; then
@@ -103,7 +110,7 @@ fi
 
 ## Unable to check for updates. silnite will revert to just reporting currently installed versions, which is what this plugin will do. Shows as an informational warning.
 if [[ -z "$MRTAVIL" ]] && [[ -z "$GKAVIL" ]] && [[ -z "$XPAVIL" ]]; then
-echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\nXProtect Version: $XPCURRENT\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates"
+echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\n\n\n$XPSTATUS\n$SIPSTATUS\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates."
 exit 20
 fi
 
@@ -115,6 +122,6 @@ fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates"
+echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates."
 exit 2
 fi
