@@ -32,31 +32,14 @@ CONNECTRESULT="$(nc -vz raw.githubusercontent.com 443 2>&1)"
 # To be run one time per defined settings hours
 
 # Runs silnite as xml and gets the information to set as a variable
-<<<<<<< HEAD
-# To be run one time per defined settings hours
-=======
 if [[ "$CONNECTRESULT" == *"succeeded"* ]]; then
 # If there is a successfully connection, run normally.
->>>>>>> Connection Check added
 SILNITE="$(/usr/local/bin/silnite ax)"
 else
 # Failing to connect runs silnite in "bmx" mode.
 SILNITE="$(/usr/local/bin/silnite bmx)"
 fi
 
-<<<<<<< HEAD
-
-# If output of above is running behind an ssl proxy, silnite will
-# run in 'report only' (bmx) mode and output information.
-# Needs more testing. Commented out for now
-#if [[ "$SILNITE" == *"App Transport Security has blocked a cleartext"* ]]; then
-#SILNITE="$(/usr/local/bin/silnite bmx)"
-#fi
-
-# Runs silnite without checking for updates (for testing).
-#SILNITE="$(/usr/local/bin/silnite bmx)"
-=======
->>>>>>> Connection Check added
 
 # Finds if there are updates waiting.
 # If there are updates, will provide a list of available updates.
@@ -99,11 +82,7 @@ XPVERSION=$(echo "${SILNITE}" | grep XProtectV | grep -Eo '[+-]?[0-9]+([.][0-9]+
 # Finds XProtect Version available to update too.
 XPAVIL=$(echo "${SILNITE}" | grep XProtectE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Fallback if silnite was unable to check for updates
-<<<<<<< HEAD
-XPCURRENT=$(echo "${SILNITE}" | grep XproVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
-=======
 XPCURRENT=$(echo "${SILNITE}" | grep XProtectV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
->>>>>>> Connection Check added
 # Checks if XProtect is out of date
 if [ "$XPVERSION" != "$XPAVIL" ]; then
 XPRESULT="XProtect is out-of-date!\nCurrent version is $XPVERSION\nAvailable version is $XPAVIL"
@@ -137,11 +116,7 @@ fi
 
 ## Unable to check for updates. silnite will revert to just reporting currently installed versions, which is what this plugin will do. Shows as an informational warning.
 if [[ -z "$MRTAVIL" ]] && [[ -z "$GKAVIL" ]] && [[ -z "$XPAVIL" ]]; then
-<<<<<<< HEAD
-echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\n\n\n$XPSTATUS\n$SIPSTATUS\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates.\n"
-=======
 echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates.\n"
->>>>>>> Connection Check added
 exit 20
 fi
 
