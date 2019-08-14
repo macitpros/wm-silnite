@@ -14,11 +14,12 @@ Alerting if specific Apple security updates have not been installed, or are avai
 
 **Emails daily/ticket created (exit 2) if...**
 * `silnite` reports updates are available `UpdateWaiting = 1`
-Reports if:
-* MRT is out of date
-* Gatekeeper is out of date
-* XProtect is out of date
-* Other updates from `softwareupdate` are available
+
+This means...
+* MRT could be out-of-date
+* Gatekeeper could be out-of-date
+* XProtect could be out-of-date
+* Other updates from `softwareupdate` are available and will be listed
 
 **If unable to check for updates, shows informational warning (exit 20)**
 Includes report of installed versions:
