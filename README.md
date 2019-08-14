@@ -10,20 +10,29 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
 
-## As of version .05:
+## As of version .6.2.1:
 
 **Emails daily/ticket created (exit 2) if...**
 * `silnite` reports updates are available `UpdateWaiting = 1`
-Reports if:
-* MRT is out of date
-* Gatekeeper is out of date
-* XProtect is out of date
+
+This means...
+* MRT could be out-of-date
+* Gatekeeper could be out-of-date
+* XProtect could be out-of-date
+* Other updates from `softwareupdate` are available and will be listed
+
+**If unable to check for updates, shows informational warning (exit 20)**
+Includes report of installed versions:
+* MRT 
+* Gatekeeper
+* XProtect
+
 
 **(initial testing complete, still needs more testing) Sends one-time alerts (exit 200) if...**
 * SIP Disabled
 * XProtect Disabled
 
-![screenshot_980](https://user-images.githubusercontent.com/17754199/62216481-70b20480-b36e-11e9-8638-df4d7d97462b.png)
+![wmscreenshot](https://user-images.githubusercontent.com/17754199/63029161-ae865100-be75-11e9-9f38-b70a42c363b3.png)
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
