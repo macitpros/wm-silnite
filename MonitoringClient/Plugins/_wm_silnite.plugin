@@ -127,6 +127,6 @@ fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\n Other pending updates:\n$PENDINGUPDATE\n\Running 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates."
+echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\n Other pending updates:\n$PENDINGUPDATE\n\n Running 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates."
 exit 2
 fi
