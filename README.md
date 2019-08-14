@@ -32,7 +32,7 @@ Includes report of installed versions:
 * SIP Disabled
 * XProtect Disabled
 
-![screenshot_980](https://user-images.githubusercontent.com/17754199/62216481-70b20480-b36e-11e9-8638-df4d7d97462b.png)
+![wmscreenshot](https://user-images.githubusercontent.com/17754199/63029161-ae865100-be75-11e9-9f38-b70a42c363b3.png)
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
