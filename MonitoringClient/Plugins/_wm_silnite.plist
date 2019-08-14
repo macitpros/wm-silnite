@@ -7,7 +7,11 @@
 	<key>PluginUUID</key>
 	<string></string>
 	<key>PluginVersion</key>
+<<<<<<< HEAD
 	<string>.6.2.1</string>
+=======
+	<string>.6.3.0</string>
+>>>>>>> Connection Check added
 	<key>ProgramArguments</key>
 	<array>
 		<string>_wm_silnite.plugin</string>
