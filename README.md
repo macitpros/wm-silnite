@@ -10,7 +10,7 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
 
-## As of version .6.2.1:
+## As of version .6.3.0:
 
 **Emails daily/ticket created (exit 2) if...**
 * `silnite` reports updates are available `UpdateWaiting = 1`
