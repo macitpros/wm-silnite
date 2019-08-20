@@ -20,23 +20,38 @@
 # * SIP Disabled
 # * XProtect Disabled
 
+# To be run one time per defined settings hours
+
 # Check if silnite is installed. If it is not, exit without running
 if [ ! -f /usr/local/bin/silnite ]; then
     exit 25
 fi
 
-# Test if connection raw.githubusercontent.com via port 443 is possible
-CONNECTRESULT="$(nc -vz raw.githubusercontent.com 443 2>&1)"
+# Runs silnite as xml and gets the information to set as a variable, also including
+# any erros that may be present.
+SILNITE="$(/usr/local/bin/silnite ax 2>&1)"
 
+### Need to add this check in as well (see below)
+#------
 
-# To be run one time per defined settings hours
+## Test if connection raw.githubusercontent.com via port 443 is possible
+#CONNECTRESULT="$(nc -vz raw.githubusercontent.com 443 2>&1)"
+
+#if [[ "$CONNECTRESULT" == *"succeeded"* ]]; then
+
+## If there is a successfully connection, run normally.
+#SILNITE="$(/usr/local/bin/silnite ax)"
+#else
+
+## Failing to connect runs silnite in "bmx" mode.
+#SILNITE="$(/usr/local/bin/silnite bmx)"
+#fi
+
+#------
 
 # Runs silnite as xml and gets the information to set as a variable
-if [[ "$CONNECTRESULT" == *"succeeded"* ]]; then
-# If there is a successfully connection, run normally.
-SILNITE="$(/usr/local/bin/silnite ax)"
-else
-# Failing to connect runs silnite in "bmx" mode.
+if [[ "$SILNITE" == *"App Transport Security has blocked"* ]]; then
+# If there is not a connection run "bmx" mode.
 SILNITE="$(/usr/local/bin/silnite bmx)"
 fi
 
