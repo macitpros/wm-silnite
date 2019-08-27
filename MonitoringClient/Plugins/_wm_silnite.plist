@@ -4,10 +4,64 @@
 <dict>
 	<key>PluginName</key>
 	<string>_silnite</string>
+	<key>PluginOptions</key>
+	<array>
+		<dict>
+			<key>SettingStorageKey</key>
+			<string>.</string>
+			<key>SettingStoragePath</key>
+			<string>/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist</string>
+			<key>SettingTitle</key>
+			<string>Silnite Reporting Options</string>
+			<key>SettingTitleHint</key>
+			<string></string>
+			<key>SettingType</key>
+			<dict>
+				<key>Type</key>
+				<string>DisplayOnly</string>
+				<key>Value</key>
+				<string></string>
+			</dict>
+		</dict>
+		<dict>
+			<key>SettingStorageKey</key>
+			<string>Check_For_Updates</string>
+			<key>SettingStoragePath</key>
+			<string>/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist</string>
+			<key>SettingTitle</key>
+			<string>Frequency to check for updates</string>
+			<key>SettingTitleHint</key>
+			<string>Number of hours between update checks. More time reduces bandwith.</string>
+			<key>SettingType</key>
+			<dict>
+				<key>Type</key>
+				<string>NumberPicker</string>
+				<key>Value</key>
+				<string>0-24,2</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>SettingStorageKey</key>
+			<string>Warn_Updates_Attempts</string>
+			<key>SettingStoragePath</key>
+			<string>/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist</string>
+			<key>SettingTitle</key>
+			<string>Number of days until alert</string>
+			<key>SettingTitleHint</key>
+			<string>Set the number of days to wait before alerting when silnite finds updates. Generally, it takes 1 (one) day for updates to auto install.</string>
+			<key>SettingType</key>
+			<dict>
+				<key>Type</key>
+				<string>NumberPicker</string>
+				<key>Value</key>
+				<string>0-30,1</string>
+			</dict>
+		</dict>
+	</array>
 	<key>PluginUUID</key>
 	<string></string>
 	<key>PluginVersion</key>
-	<string>.6.3.1</string>
+	<string>.6.4.0</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>_wm_silnite.plugin</string>
