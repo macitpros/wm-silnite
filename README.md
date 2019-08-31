@@ -13,11 +13,11 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ## As of version .6.4.0:
 
 **Preference Pane**
-* Frequency to check for updates
-Sets how often a full run will be done. Less often helps with reducing bandwith and speeds up regular reporting.
+* _Frequency to check for updates_
+  * Sets how often a full run will be done. Less often helps with reducing bandwith and speeds up regular reporting.
 
-* Unable to check for updates attempts
-If silnite is unable to check for updates due to connection failure, an information warning will be generated (no tickets/emails). An alert (email/ticket) will be generated after the set number of failed attempts has passed.
+* _Unable to check for updates attempts_
+  * If `silnite` is unable to check for updates due to connection failure, an information warning will be generated (no tickets/emails) in your Watchman Monitoring dashboard. If the number of attempts exceeds this number an alert (ticket/email) will be generated.
 
 ![screenshot_1069](https://user-images.githubusercontent.com/17754199/64067360-fe427780-cbec-11e9-9725-9d68cdffc0ec.png)
 
