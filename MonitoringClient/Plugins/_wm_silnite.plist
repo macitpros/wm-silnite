@@ -46,15 +46,15 @@
 			<key>SettingStoragePath</key>
 			<string>/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist</string>
 			<key>SettingTitle</key>
-			<string>Number of days until alert</string>
+			<string>Unable to check for updates attempts</string>
 			<key>SettingTitleHint</key>
-			<string>Set the number of days to wait before alerting when silnite finds updates. Generally, it takes 1 (one) day for updates to auto install.</string>
+			<string>If silnite is unable to check for updates due to network issues, you'll receive an alert after the number of attempts set below.</string>
 			<key>SettingType</key>
 			<dict>
 				<key>Type</key>
 				<string>NumberPicker</string>
 				<key>Value</key>
-				<string>0-30,1</string>
+				<string>0-99,1</string>
 			</dict>
 		</dict>
 	</array>
