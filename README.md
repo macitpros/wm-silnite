@@ -14,10 +14,10 @@ Alerting if specific Apple security updates have not been installed, or are avai
 
 **Preference Pane**
 * _Frequency to check for updates_
-  * Sets how often a full run will be done. Less often helps with reducing bandwith and speeds up regular reporting.
+  * Sets how often a full run will be done. More time between full checks will help speed up regular Watchman Monitoring reporting.
 
 * _Unable to check for updates attempts_
-  * If `silnite` is unable to check for updates due to connection failure, an information warning will be generated (no tickets/emails) in your Watchman Monitoring dashboard. If the number of attempts exceeds this number an alert (ticket/email) will be generated.
+  * If `silnite` is unable to check for updates due to a connection failure, an informational warning will be generated (no tickets/emails) in your Watchman Monitoring dashboard. If the number of attempts exceeds this number, an alert (ticket/email) will be generated.
 
 ![screenshot_1069](https://user-images.githubusercontent.com/17754199/64067360-fe427780-cbec-11e9-9725-9d68cdffc0ec.png)
 
@@ -41,11 +41,11 @@ Includes report of installed versions:
 * SIP Disabled
 * XProtect Disabled
 
+![wmscreenshot](https://user-images.githubusercontent.com/17754199/63029161-ae865100-be75-11e9-9f38-b70a42c363b3.png)
+
 **Known Issues**
 * Need to make adjustments to prevent overwriting existing settings file
 * Once update checking is working, a fresh run should begin, currently not the case.
-
-![wmscreenshot](https://user-images.githubusercontent.com/17754199/63029161-ae865100-be75-11e9-9f38-b70a42c363b3.png)
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
