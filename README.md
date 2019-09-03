@@ -10,7 +10,16 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
 
-## As of version .6.3.0:
+## As of version .6.4.0:
+
+**Preference Pane**
+* _Frequency to check for updates_
+  * Sets how often a full run will be done. More time between full checks will help speed up regular Watchman Monitoring reporting.
+
+* _Unable to check for updates attempts_
+  * If `silnite` is unable to check for updates due to a connection failure, an informational warning will be generated (no tickets/emails) in your Watchman Monitoring dashboard. If the number of attempts exceeds this number, an alert (ticket/email) will be generated.
+
+![screenshot_1069](https://user-images.githubusercontent.com/17754199/64067360-fe427780-cbec-11e9-9725-9d68cdffc0ec.png)
 
 **Emails daily/ticket created (exit 2) if...**
 * `silnite` reports updates are available `UpdateWaiting = 1`
@@ -33,6 +42,10 @@ Includes report of installed versions:
 * XProtect Disabled
 
 ![wmscreenshot](https://user-images.githubusercontent.com/17754199/63029161-ae865100-be75-11e9-9f38-b70a42c363b3.png)
+
+**Known Issues**
+* Need to make adjustments to prevent overwriting existing settings file
+* Once update checking is working, a fresh run should begin, currently not the case.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

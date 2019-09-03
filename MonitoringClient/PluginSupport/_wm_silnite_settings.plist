@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Check_For_Updates</key>
+	<integer>12</integer>
+	<key>First_Run</key>
+	<true/>
+	<key>PrefPaneVisibility</key>
+	<true/>
+	<key>Run_Count</key>
+	<string>1</string>
+	<key>Unable_to_Check_Count</key>
+	<string>0</string>
+	<key>Warn_Updates_Attempts</key>
+	<integer>2</integer>
+</dict>
+</plist>
