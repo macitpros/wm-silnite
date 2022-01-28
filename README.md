@@ -12,6 +12,7 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ## As of version .7.0.1:
 Adds compatibility for silnite 6, which in turn adds compatibility with Apple Silicon and macOS 12. 
 Get silnite version 6 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
+This version is NOT compatible with older versions of silnite. Requires silnite 6 to be installed.
 
 
 ## As of version .6.4.0:
