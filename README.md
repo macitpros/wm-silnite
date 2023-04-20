@@ -9,6 +9,11 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ### Note from Eclectic Light Company developer:
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
+## As of version .9.0.1:
+Simply a version bump to match current `silnite` binary version number
+Requires silnite 9 to be installed
+Get silnite version 9 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
+
 ## As of version .7.0.1:
 Adds compatibility for silnite 6, which in turn adds compatibility with Apple Silicon and macOS 12. 
 Get silnite version 6 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
