@@ -61,7 +61,7 @@
 	<key>PluginUUID</key>
 	<string></string>
 	<key>PluginVersion</key>
-	<string>.9.5.0</string>
+	<string>.9.5.1</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>_wm_silnite.plugin</string>
