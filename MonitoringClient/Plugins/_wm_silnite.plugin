@@ -38,6 +38,7 @@ defaults write $SILSETTINGS Warn_Updates_Attempts 0
 defaults write $SILSETTINGS PrefPaneVisibility true
 chmod 644 $SILSETTINGS
 else
+chmod 644 $SILSETTINGS
 # Reads current run count
 RUNCOUNT="$(defaults read $SILSETTINGS Run_Count)"
 # Reads if this is the first run, which will force a full run
