@@ -45,7 +45,7 @@ FIRSTRUN="$(defaults read $SILSETTINGS First_Run)"
 # Reads the number of times a warning (informational) alert was sent
 WARNRUNCOUNT="$(defaults read $SILSETTINGS Unable_to_Check_Count)" | [ -z $WARNRUNCOUNT ] && defaults write $SILSETTINGS Unable_to_Check_Count 0
 # Reads Check for Updates
-CHECKUPDATE="$(defaults read $SILSETTINGS Check_For_Updates)" | [ -z $CHECKUPDATE ] && defaults write $SILSETTINGS Check_For_Updates 12
+CHECKUPDATE="$(defaults read $SILSETTINGS Check_For_Updates)"
 # Reads Warn Updates Setting
 WARNATTEMPTS="$(defaults read $SILSETTINGS Warn_Updates_Attempts)" | [ -z $WARNATTEMPTS ] && defaults write $SILSETTINGS Warn_Updates_Attempts 0
 chmod 644 $SILSETTINGS
