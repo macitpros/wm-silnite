@@ -2,7 +2,7 @@
 
 # PLUGIN: WM silnite
 # AUTHOR: DAN MONGE @MACITPROS
-# DATE:   JULY/31/2019
+# DATE:   MAY/24/2023
 
 # Takes a bit of time to run. Only runs per the 'Frequency to check for updates' set in Preference Pane.
 # Emails daily (exit 2) for updates available. Displays if:
