@@ -31,7 +31,7 @@ SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
 if [ ! -f $SILSETTINGS ]; then
 touch $SILSETTINGS
 defaults write $SILSETTINGS Run_Count 1
-defaults write $SILSETTINGS First_Run -bool false
+defaults write $SILSETTINGS First_Run -bool true
 defaults write $SILSETTINGS Unable_to_Check_Count 0
 defaults write $SILSETTINGS Check_For_Updates 12
 defaults write $SILSETTINGS Warn_Updates_Attempts 0
