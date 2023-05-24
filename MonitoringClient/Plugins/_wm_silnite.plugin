@@ -69,7 +69,7 @@ fi
 # If there are updates, will provide a list of available updates.
 UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-PENDINGUPDATE="$(softwareupdate -l --include-config-data | grep '\*')"
+PENDINGUPDATE="$(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
 fi
 
 ## Malware Removal Tool
