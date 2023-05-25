@@ -38,7 +38,7 @@ This version is NOT compatible with older versions of silnite. Requires silnite 
 
 **Terminal/Command Line Options**
 * Force a one-time full run ignoring the frequency count: `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist First_Run -bool true`
-* Set the "Frequency to check for updates" count (set _NUM_ to the number): `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist Run_Count _NUM_`
+* Set the "Frequency to check for updates" count (set _NUM_ to the number): `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist Check_For_Updates _NUM_`
 * Set the "Unable to check for updates attempts" count (set _NUM_ to the number): `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist Warn_Updates_Attempts _NUM_`
 
 **Emails daily/ticket created (exit 2) if...**
