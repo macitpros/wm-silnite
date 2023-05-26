@@ -11,8 +11,9 @@ Alerting if specific Apple security updates have not been installed, or are avai
 
 ## As of version .9.5.9:
 Uses `/Library/Preferences/com.apple.SoftwareUpdate.plist/Library/Preferences/com.apple.SoftwareUpdate.plist` for gathering list of recommended updates (stops using `softwareupdate -l`).
-Adjusts if a plist setting is missing.
+Adjusts if a plist setting file is missing an expected value.
 Creates a default settings plist on new installation.
+Changes default reporting frequency to 8 from 12 (more frequently)
 
 ## As of version .9.0.1:
 Simply a version bump to match current `silnite` binary version number
