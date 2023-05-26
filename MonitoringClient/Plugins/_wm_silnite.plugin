@@ -28,8 +28,6 @@ fi
 # Read existing settings file
 SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
 
-
-
 # Default Check for update attempts
 CHECKUPDATEDEFAULT="8"
 
@@ -37,9 +35,12 @@ CHECKUPDATEDEFAULT="8"
 if [ ! -f "$SILSETTINGS" ]; then
 	touch $SILSETTINGS
 	defaults write $SILSETTINGS Run_Count 1
+	RUNCOUNT="$(defaults read $SILSETTINGS Run_Count)"
 	defaults write $SILSETTINGS First_Run -bool true
+	FIRSTRUN="$(defaults read $SILSETTINGS First_Run)"
 	defaults write $SILSETTINGS Unable_to_Check_Count 0
 	defaults write $SILSETTINGS Check_For_Updates $CHECKUPDATEDEFAULT
+	CHECKUPDATE="$(defaults read $SILSETTINGS Check_For_Updates)"
 	defaults write $SILSETTINGS Warn_Updates_Attempts 2
 	defaults write $SILSETTINGS PrefPaneVisibility true
 	chmod 644 $SILSETTINGS
