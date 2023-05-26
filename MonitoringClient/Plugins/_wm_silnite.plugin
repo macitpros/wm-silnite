@@ -2,7 +2,7 @@
 
 # PLUGIN: WM silnite
 # AUTHOR: DAN MONGE @MACITPROS
-# DATE:   JULY/31/2019
+# DATE:   MAY/24/2023
 
 # Takes a bit of time to run. Only runs per the 'Frequency to check for updates' set in Preference Pane.
 # Emails daily (exit 2) for updates available. Displays if:
@@ -20,61 +20,72 @@
 # * SIP Disabled
 # * XProtect Disabled
 
-# Settings file
-SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
-
-# Reads run count
-RUNCOUNT="$(defaults read $SILSETTINGS Run_Count)"
-
-# Reads if this is the first run, which will force a full run
-FIRSTRUN="$(defaults read $SILSETTINGS First_Run)"
-
-# Reads the number of times a warning (informational) alert was sent
-WARNRUNCOUNT="$(defaults read $SILSETTINGS Unable_to_Check_Count)"
-
-# Reads Check for Updates
-CHECKUPDATE="$(defaults read $SILSETTINGS Check_For_Updates)"
-
-# Reads Warn Updates Setting
-WARNATTEMPTS="$(defaults read $SILSETTINGS Warn_Updates_Attempts)"
-
 # Check if silnite is installed. If it is not, exit without running
 if [ ! -f /usr/local/bin/silnite ]; then
-    exit 25
+	exit 25
 fi
 
+# Read existing settings file
+SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
+
+# Default Check for update attempts
+CHECKUPDATEDEFAULT="8"
+
+# If the settings file does not exist, create it and set defaults.
+if [ ! -f "$SILSETTINGS" ]; then
+	touch $SILSETTINGS
+	defaults write $SILSETTINGS Run_Count 1
+	RUNCOUNT="$(defaults read $SILSETTINGS Run_Count)"
+	defaults write $SILSETTINGS First_Run -bool true
+	FIRSTRUN="$(defaults read $SILSETTINGS First_Run)"
+	defaults write $SILSETTINGS Unable_to_Check_Count 0
+	defaults write $SILSETTINGS Check_For_Updates $CHECKUPDATEDEFAULT
+	CHECKUPDATE="$(defaults read $SILSETTINGS Check_For_Updates)"
+	defaults write $SILSETTINGS Warn_Updates_Attempts 2
+	defaults write $SILSETTINGS PrefPaneVisibility true
+	chmod 644 $SILSETTINGS
+else
+	# Make sure the Preference Pane is visible
+	defaults write $SILSETTINGS PrefPaneVisibility true
+	
+	# Set correct permissions for settings file
+	chmod 644 $SILSETTINGS
+	
+	# Reads current run count
+	RUNCOUNT="$(defaults read $SILSETTINGS Run_Count)"
+	
+	# Reads if this is the first run, which will force a full run
+	FIRSTRUN="$(defaults read $SILSETTINGS First_Run)"
+		[ -z "$FIRSTRUN" ] && defaults write $SILSETTINGS First_Run -bool true && chmod 644 $SILSETTINGS
+	
+	# Reads the number of times a warning (informational) alert was sent
+	WARNRUNCOUNT="$(defaults read $SILSETTINGS Unable_to_Check_Count)"
+		[ -z "$WARNRUNCOUNT" ] && defaults write $SILSETTINGS Unable_to_Check_Count 0 && chmod 644 $SILSETTINGS
+	
+	# Reads Check for Updates Setting
+	CHECKUPDATE="$(defaults read $SILSETTINGS Check_For_Updates)"
+		[ -z "$CHECKUPDATE" ] && defaults write $SILSETTINGS Check_For_Updates $CHECKUPDATEDEFAULT && chmod 644 $SILSETTINGS
+	
+	# Reads Warn Updates Setting
+	WARNATTEMPTS="$(defaults read $SILSETTINGS Warn_Updates_Attempts)"
+		[ -z "$WARNATTEMPTS" ] && defaults write $SILSETTINGS Warn_Updates_Attempts 2 && chmod 644 $SILSETTINGS
+fi
 
 # Runs silnite as xml and gets the information to set as a variable, also including
 # any erros that may be present.
+# First run of plugin
 if (( $RUNCOUNT >= $CHECKUPDATE )) || [[ "$FIRSTRUN" = 1 ]]; then
 SILNITE="$(/usr/local/bin/silnite ax 2>&1)"
-defaults write $SILSETTINGS Run_Count 1
-defaults write $SILSETTINGS First_Run -bool false
-chmod 644 $SILSETTINGS
+	defaults write $SILSETTINGS Run_Count 1
+	defaults write $SILSETTINGS First_Run -bool false
+	chmod 644 $SILSETTINGS
 else
-RUNCOUNT=$((RUNCOUNT + 1))
-defaults write $SILSETTINGS Run_Count $RUNCOUNT
-chmod 644 $SILSETTINGS
-exit 25
+	RUNCOUNT=$((RUNCOUNT + 1))
+	# Previous installation
+	defaults write $SILSETTINGS Run_Count $RUNCOUNT
+	chmod 644 $SILSETTINGS
+	exit 25
 fi
-
-### Need to add this check in as well (see below)
-#------
-
-## Test if connection raw.githubusercontent.com via port 443 is possible
-#CONNECTRESULT="$(nc -vz raw.githubusercontent.com 443 2>&1)"
-
-#if [[ "$CONNECTRESULT" == *"succeeded"* ]]; then
-
-## If there is a successfully connection, run normally.
-#SILNITE="$(/usr/local/bin/silnite ax)"
-#else
-
-## Failing to connect runs silnite in "bmx" mode.
-#SILNITE="$(/usr/local/bin/silnite bmx)"
-#fi
-
-#------
 
 # Runs silnite as xml and gets the information to set as a variable
 if [[ "$SILNITE" == *"App Transport Security has blocked"* ]]; then
@@ -87,7 +98,7 @@ fi
 # If there are updates, will provide a list of available updates.
 UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-PENDINGUPDATE="$(softwareupdate -l --include-config-data | grep '\*')"
+PENDINGUPDATE="$(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
 fi
 
 ## Malware Removal Tool
@@ -172,7 +183,7 @@ fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\n Other pending updates:\n$PENDINGUPDATE\n\n Running 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates."
+echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\n Pending updates:\n$PENDINGUPDATE\n\n Running 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
 exit 2
 fi
 

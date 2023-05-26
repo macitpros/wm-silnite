@@ -9,6 +9,12 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ### Note from Eclectic Light Company developer:
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
+## As of version .9.5.9:
+Uses `/Library/Preferences/com.apple.SoftwareUpdate.plist/Library/Preferences/com.apple.SoftwareUpdate.plist` for gathering list of recommended updates (stops using `softwareupdate -l`).
+Adjusts if a plist setting file is missing an expected value.
+Creates a default settings plist on new installation.
+Changes default reporting frequency to 8 from 12 (more frequently)
+
 ## As of version .9.0.1:
 Simply a version bump to match current `silnite` binary version number
 Requires silnite 9 to be installed
@@ -33,7 +39,7 @@ This version is NOT compatible with older versions of silnite. Requires silnite 
 
 **Terminal/Command Line Options**
 * Force a one-time full run ignoring the frequency count: `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist First_Run -bool true`
-* Set the "Frequency to check for updates" count (set _NUM_ to the number): `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist Run_Count _NUM_`
+* Set the "Frequency to check for updates" count (set _NUM_ to the number): `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist Check_For_Updates _NUM_`
 * Set the "Unable to check for updates attempts" count (set _NUM_ to the number): `sudo defaults write /Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist Warn_Updates_Attempts _NUM_`
 
 **Emails daily/ticket created (exit 2) if...**
