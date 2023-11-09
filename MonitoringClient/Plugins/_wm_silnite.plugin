@@ -2,18 +2,18 @@
 
 # PLUGIN: WM silnite
 # AUTHOR: DAN MONGE @MACITPROS
-# DATE:   MAY/24/2023
+# DATE:   NOV/09/2023
 
 # Takes a bit of time to run. Only runs per the 'Frequency to check for updates' set in Preference Pane.
 # Emails daily (exit 2) for updates available. Displays if:
 # * MRT is out of date
-# * Gatekeeper is out of date
+# * XProtect Remediator is out of date
 # * XProtect is out of date
 #
 # If unable to check for updates, shows informational warning (exit 20),
 # along with installed versions of
 # * MRT 
-# * Gatekeeper
+# * XProtect Remediator
 # * XProtect
 #
 # Sends one-time alerts (exit 200) for:
@@ -27,12 +27,13 @@ fi
 
 # Read existing settings file
 SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
+SILRESULTS='/Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt'
 
 # Default Check for update attempts
 CHECKUPDATEDEFAULT="8"
 
-# If the settings file does not exist, create it and set defaults.
-if [ ! -f "$SILSETTINGS" ]; then
+# If the silnite results file does not exist, settings to defaults.
+if [ ! -f "$SILRESULTS" ]; then
 	touch $SILSETTINGS
 	defaults write $SILSETTINGS Run_Count 1
 	RUNCOUNT="$(defaults read $SILSETTINGS Run_Count)"
@@ -44,6 +45,7 @@ if [ ! -f "$SILSETTINGS" ]; then
 	defaults write $SILSETTINGS Warn_Updates_Attempts 2
 	defaults write $SILSETTINGS PrefPaneVisibility true
 	chmod 644 $SILSETTINGS
+	/usr/local/bin/silnite ax > /Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt
 else
 	# Make sure the Preference Pane is visible
 	defaults write $SILSETTINGS PrefPaneVisibility true
@@ -75,7 +77,9 @@ fi
 # any erros that may be present.
 # First run of plugin
 if (( $RUNCOUNT >= $CHECKUPDATE )) || [[ "$FIRSTRUN" = 1 ]]; then
-SILNITE="$(/usr/local/bin/silnite ax 2>&1)"
+
+# Write silnite results to a file so it can be read during every run
+/usr/local/bin/silnite ax > /Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt
 	defaults write $SILSETTINGS Run_Count 1
 	defaults write $SILSETTINGS First_Run -bool false
 	chmod 644 $SILSETTINGS
@@ -84,8 +88,9 @@ else
 	# Previous installation
 	defaults write $SILSETTINGS Run_Count $RUNCOUNT
 	chmod 644 $SILSETTINGS
-	exit 25
 fi
+# Read the results file
+SILNITE=$(cat /Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt)
 
 # Runs silnite as xml and gets the information to set as a variable
 if [[ "$SILNITE" == *"App Transport Security has blocked"* ]]; then
@@ -115,18 +120,18 @@ else
 MRTRESULT="MRT is up-to-date"
 fi
 
-## Gatekeeper
-# Finds Gatekeeper Version installed
-GKVERSION=$(echo "${SILNITE}" | grep GatekeeperV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+## XProtect Remediator
+# Finds XProtect Remediator Version installed
+XPRVERSION=$(echo "${SILNITE}" | grep XPremV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Finds Gatekeeper Version available to update too.
-GKAVIL=$(echo "${SILNITE}" | grep GatekeeperE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+XPRAVIL=$(echo "${SILNITE}" | grep XPremE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Fallback If silnite was unable to check for updates
-GKCURRENT=$(echo "${SILNITE}" | grep GateVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+XPRCURRENT=$(echo "${SILNITE}" | grep XpremVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Checks is Gatekeeper is out of date
-if [ "$GKVERSION" != "$GKAVIL" ]; then
-GKRESULT="Gatekeeper is out-of-date!\nCurrent version is $GKVERSION\nAvailable version is $GKAVIL"
+if [ "$XPRVERSION" != "$XPRAVIL" ]; then
+XPRRESULT="XProtect Remediator is out-of-date!\nCurrent version is $XPRVERSION\nAvailable version is $XPRAVIL"
 else
-GKRESULT="Gatekeeper is up-to-date"
+XPRRESULT="XProtect Remediator is up-to-date"
 fi
 
 ## XProtect
@@ -170,26 +175,27 @@ exit 200
 fi
 
 ## Unable to check for updates. silnite will revert to just reporting currently installed versions, which is what this plugin will do. Shows as an informational warning.
-if [[ -z "$MRTAVIL" ]] && [[ -z "$GKAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" >= "$WARNATTEMPTS" )); then
-echo "$WARNRUNCOUNT attempts to check for updates have been made. This exceeds 'Unable to check for updates attempts' ($WARNATTEMPTS) set in the Preference Pane.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\n"
+if [[ -z "$MRTAVIL" ]] && [[ -z "$XPRAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" >= "$WARNATTEMPTS" )); then
+echo "$WARNRUNCOUNT attempts to check for updates have been made. This exceeds 'Unable to check for updates attempts' ($WARNATTEMPTS) set in the Preference Pane.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nXProtect Remediator Version: $XPRCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\n"
 exit 2
+
 ## Alert (sent ticket/email) when silnite has not been able to check for updates as defined in the Preference Pane.
-elif [[ -z "$MRTAVIL" ]] && [[ -z "$GKAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" < "$WARNATTEMPTS" )); then
+elif [[ -z "$MRTAVIL" ]] && [[ -z "$XPRAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" < "$WARNATTEMPTS" )); then
 WARNRUNCOUNT=$((WARNRUNCOUNT + 1))
 defaults write $SILSETTINGS Unable_to_Check_Count $WARNRUNCOUNT
-echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates.\n\nUnable to check update attempts:$WARNRUNCOUNT\n"
+echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nXProtect Remediator Version: $XPRCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates.\n\nUnable to check update attempts:$WARNRUNCOUNT\n"
 exit 20
 fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\n Pending updates:\n$PENDINGUPDATE\n\n Running 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+echo "There are updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
 exit 2
 fi
 
 # All good, nothing to see here.
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 0"* ]]; then
 defaults write $SILSETTINGS Unable_to_Check_Count 0
-echo "All looks good. No pending updates. Plus...\n$XPSTATUS\n$SIPSTATUS"
+echo "All looks good. No pending updates. Plus...\n$XPSTATUS\n$SIPSTATUS\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE"
 exit 0
 fi
