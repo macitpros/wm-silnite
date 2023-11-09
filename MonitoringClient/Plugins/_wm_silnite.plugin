@@ -122,19 +122,21 @@ else
 MRTRESULT="MRT is up-to-date"
 fi
 
-## Gatekeeper
-# Finds Gatekeeper Version installed
-GKVERSION=$(echo "${SILNITE}" | grep GatekeeperV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+
+## XProtect Remediator
+# Finds XProtect Remediator Version installed
+XPRVERSION=$(echo "${SILNITE}" | grep XPremV | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Finds Gatekeeper Version available to update too.
-GKAVIL=$(echo "${SILNITE}" | grep GatekeeperE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+XPRAVIL=$(echo "${SILNITE}" | grep XPremE | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Fallback If silnite was unable to check for updates
-GKCURRENT=$(echo "${SILNITE}" | grep GateVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+XPRCURRENT=$(echo "${SILNITE}" | grep XpremVer | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
 # Checks is Gatekeeper is out of date
-if [ "$GKVERSION" != "$GKAVIL" ]; then
-GKRESULT="Gatekeeper is out-of-date!\nCurrent version is $GKVERSION\nAvailable version is $GKAVIL"
+if [ "$XPRVERSION" != "$XPRAVIL" ]; then
+XPRRESULT="XProtect Remediator is out-of-date!\nCurrent version is $XPRVERSION\nAvailable version is $XPRAVIL"
 else
-GKRESULT="Gatekeeper is up-to-date"
+XPRRESULT="XProtect Remediator is up-to-date"
 fi
+
 
 ## XProtect
 # Finds XProtect Version installed
@@ -177,20 +179,21 @@ exit 200
 fi
 
 ## Unable to check for updates. silnite will revert to just reporting currently installed versions, which is what this plugin will do. Shows as an informational warning.
-if [[ -z "$MRTAVIL" ]] && [[ -z "$GKAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" >= "$WARNATTEMPTS" )); then
-echo "$WARNRUNCOUNT attempts to check for updates have been made. This exceeds 'Unable to check for updates attempts' ($WARNATTEMPTS) set in the Preference Pane.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\n"
+if [[ -z "$MRTAVIL" ]] && [[ -z "$XPRAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" >= "$WARNATTEMPTS" )); then
+echo "$WARNRUNCOUNT attempts to check for updates have been made. This exceeds 'Unable to check for updates attempts' ($WARNATTEMPTS) set in the Preference Pane.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nXProtect Remediator Version: $XPRCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\n"
 exit 2
+
 ## Alert (sent ticket/email) when silnite has not been able to check for updates as defined in the Preference Pane.
-elif [[ -z "$MRTAVIL" ]] && [[ -z "$GKAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" < "$WARNATTEMPTS" )); then
+elif [[ -z "$MRTAVIL" ]] && [[ -z "$XPRAVIL" ]] && [[ -z "$XPAVIL" ]] && (( "$WARNRUNCOUNT" < "$WARNATTEMPTS" )); then
 WARNRUNCOUNT=$((WARNRUNCOUNT + 1))
 defaults write $SILSETTINGS Unable_to_Check_Count $WARNRUNCOUNT
-echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nGatekeeper Version: $GKCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates.\n\nUnable to check update attempts:$WARNRUNCOUNT\n"
+echo "Unable to check for updates at this time.\n\nCurrent versions installed:\nMRT Version: $MRTCURRENT\nXProtect Remediator Version: $XPRCURRENT\nXProtect Version: $XPCURRENT\n\nPlus...\n$XPSTATUS\n$SIPSTATUS\n\nVisit https://eclecticlight.co/2019/08/01/silentknight-and-silnite-faq/ to manually review updates.\n\nUnable to check update attempts:$WARNRUNCOUNT\n"
 exit 20
 fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n\n$GKRESULT\n\n$XPRESULT\n\n Pending updates:\n$PENDINGUPDATE\n\n Running 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+echo "There are updates available!\n\n$MRTRESULT\n\n$XPRRESULT\n\n$XPRESULT\n\n Pending updates:\n$PENDINGUPDATE\n\n Running 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
 exit 2
 fi
 
