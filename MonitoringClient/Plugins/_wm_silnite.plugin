@@ -75,7 +75,10 @@ fi
 # any erros that may be present.
 # First run of plugin
 if (( $RUNCOUNT >= $CHECKUPDATE )) || [[ "$FIRSTRUN" = 1 ]]; then
-SILNITE="$(/usr/local/bin/silnite ax 2>&1)"
+
+# Write silnite results to a file so it can be read during every run
+SILNITERESULTS="$(/usr/local/bin/silnite ax > /Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt)"
+
 	defaults write $SILSETTINGS Run_Count 1
 	defaults write $SILSETTINGS First_Run -bool false
 	chmod 644 $SILSETTINGS
@@ -86,6 +89,10 @@ else
 	chmod 644 $SILSETTINGS
 	exit 25
 fi
+
+# Read the results file
+SILNITE=$SILNITERESULTS
+
 
 # Runs silnite as xml and gets the information to set as a variable
 if [[ "$SILNITE" == *"App Transport Security has blocked"* ]]; then
