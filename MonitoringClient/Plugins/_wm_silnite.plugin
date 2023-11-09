@@ -188,13 +188,13 @@ fi
 
 # Updates available - Warn if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count:$RUNCOUNT\nFull Run Frequency:$CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+echo "There are updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
 exit 2
 fi
 
 # All good, nothing to see here.
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 0"* ]]; then
 defaults write $SILSETTINGS Unable_to_Check_Count 0
-echo "All looks good. No pending updates. Plus...\n$XPSTATUS\n$SIPSTATUS\n\nCurrent Run Count:$RUNCOUNT\nFull Run Frequency:$CHECKUPDATE"
+echo "All looks good. No pending updates. Plus...\n$XPSTATUS\n$SIPSTATUS\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE"
 exit 0
 fi
