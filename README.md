@@ -10,32 +10,32 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
 ## As of version .9.6.0.0
-Requires silnite 10 to be installed
-Creates a text file with results of a full run at `/Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt`
-Will run an hourly _light_ run based off results file
-Full run of `silnite` results will still be based off _Frequency to check for updates_... results file will be updated at that time
-Fixes stale plugin results (now that data is sent during every run)
-Added Run Count Information to Plugin results
-Removes Gatekeeper Version reporting (results removed from silnite 10)
-Adds XProtect Remediator Version reporting
+* Requires silnite 10 to be installed
+* Creates a text file with results of a full run at `/Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt`
+* Will run an hourly _light_ run based off results file
+* Full run of `silnite` results will still be based off _Frequency to check for updates_... results file will be updated at that time
+* Fixes stale plugin results (now that data is sent during every run)
+* Added Run Count Information to Plugin results
+* Removes Gatekeeper Version reporting (results removed from silnite 10)
+* Adds XProtect Remediator Version reporting
 
 <img width="935" alt="Capture_2023-11-09_08-27-55_AM" src="https://github.com/macitpros/wm-silnite/assets/17754199/89c1996f-3648-47bb-8cd7-0a5ea225e18c">
 
 ## As of version .9.5.9:
-Uses `/Library/Preferences/com.apple.SoftwareUpdate.plist/Library/Preferences/com.apple.SoftwareUpdate.plist` for gathering list of recommended updates (stops using `softwareupdate -l`).
-Adjusts if a plist setting file is missing an expected value.
-Creates a default settings plist on new installation.
-Changes default reporting frequency to 8 from 12 (more frequently)
+* Uses `/Library/Preferences/com.apple.SoftwareUpdate.plist/Library/Preferences/com.apple.SoftwareUpdate.plist` for gathering list of recommended updates (stops using `softwareupdate -l`).
+* Adjusts if a plist setting file is missing an expected value.
+* Creates a default settings plist on new installation.
+* Changes default reporting frequency to 8 from 12 (more frequently)
 
 ## As of version .9.0.1:
-Simply a version bump to match current `silnite` binary version number
-Requires silnite 9 to be installed
-Get silnite version 9 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
+* Simply a version bump to match current `silnite` binary version number
+* Requires silnite 9 to be installed
+* Get silnite version 9 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
 
 ## As of version .7.0.1:
-Adds compatibility for silnite 6, which in turn adds compatibility with Apple Silicon and macOS 12. 
-Get silnite version 6 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
-This version is NOT compatible with older versions of silnite. Requires silnite 6 to be installed.
+* Adds compatibility for silnite 6, which in turn adds compatibility with Apple Silicon and macOS 12. 
+* Get silnite version 6 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
+* This version is NOT compatible with older versions of silnite. Requires silnite 6 to be installed.
 
 
 ## As of version .6.4.0:
@@ -59,14 +59,14 @@ This version is NOT compatible with older versions of silnite. Requires silnite 
 
 This means...
 * MRT could be out-of-date
-* Gatekeeper could be out-of-date
+* XProtect Remediator could be out-of-date
 * XProtect could be out-of-date
 * Other updates from `softwareupdate` are available and will be listed
 
 **If unable to check for updates, shows informational warning (exit 20)**
 Includes report of installed versions:
 * MRT 
-* Gatekeeper
+* XProtect Remediator
 * XProtect
 
 
