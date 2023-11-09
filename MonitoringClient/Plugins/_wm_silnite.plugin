@@ -2,18 +2,18 @@
 
 # PLUGIN: WM silnite
 # AUTHOR: DAN MONGE @MACITPROS
-# DATE:   MAY/24/2023
+# DATE:   NOV/09/2023
 
 # Takes a bit of time to run. Only runs per the 'Frequency to check for updates' set in Preference Pane.
 # Emails daily (exit 2) for updates available. Displays if:
 # * MRT is out of date
-# * Gatekeeper is out of date
+# * XProtect Remediator is out of date
 # * XProtect is out of date
 #
 # If unable to check for updates, shows informational warning (exit 20),
 # along with installed versions of
 # * MRT 
-# * Gatekeeper
+# * XProtect Remediator
 # * XProtect
 #
 # Sends one-time alerts (exit 200) for:
