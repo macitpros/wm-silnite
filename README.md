@@ -11,8 +11,8 @@ Alerting if specific Apple security updates have not been installed, or are avai
 
 ## As of version .9.7.0.0
 * Uses curl to pull down current OS version information from https://gdmf.apple.com/v2/pmv
-*  Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/ for the excellent write up on how to get the latest OS version updates
-* Uses curl result to determine if the current OS matches on alerting for ticket/email (`exit 2`)
+	* Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/ for the excellent write up on how to get the latest OS version updates
+* Uses `curl` result to determine if the current OS matches on alerting for ticket/email (`exit 2`)
 * Will run OS version check during every run
 * Configuration Data related to XProtect/MRT/etc will continue to run according to schedule
 * Results for Configuration data will be an informational result (no ticket/email) in the Watchman Monitoring dashboard (`exit 20`)
