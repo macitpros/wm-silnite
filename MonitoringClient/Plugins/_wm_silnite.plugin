@@ -118,7 +118,7 @@ fi
 # If there are updates, will provide a list of available updates.
 UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-PENDINGUPDATE="$(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
+PENDINGUPDATE="Pending Update:\n$(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
 fi
 
 ## Malware Removal Tool
@@ -204,13 +204,13 @@ fi
 
 # Updates available - Email/ticket created if updates to the OS are available
 if [[ "$updatestatus" == *"Update available"* ]]; then
-echo "There are OS updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending"
+echo "There are OS updates available!\n\n Current OS version:$currentos\n$PENDINGUPDATE\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending"
 exit 2
 fi
 
 # Other updates available - Informational if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are other updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+echo "There are other updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
 exit 20
 fi
 
