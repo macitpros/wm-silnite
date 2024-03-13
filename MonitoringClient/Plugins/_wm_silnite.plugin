@@ -2,7 +2,10 @@
 
 # PLUGIN: WM silnite
 # AUTHOR: DAN MONGE @MACITPROS
-# DATE:   NOV/09/2023
+# DATE:   MAR/13/2024
+
+# Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/
+# for the excellent write up on how to get the latest OS version updates.
 
 # Takes a bit of time to run. Only runs per the 'Frequency to check for updates' set in Preference Pane.
 # Emails daily (exit 2) for updates available. Displays if:
@@ -19,6 +22,7 @@
 # Sends one-time alerts (exit 200) for:
 # * SIP Disabled
 # * XProtect Disabled
+#
 
 # Check if silnite is installed. If it is not, exit without running
 if [ ! -f /usr/local/bin/silnite ]; then
@@ -28,6 +32,17 @@ fi
 # Read existing settings file
 SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
 SILRESULTS='/Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt'
+
+# OS Version Detection - used from https://www.sudoade.com/software-update-bugged-fact/
+softwareupdatelist="$(curl -m 5 -sfL 'https://gdmf.apple.com/v2/pmv')"
+# Strip out all content before first mention of "macOS"
+macOSonly=${softwareupdatelist#*macOS} 
+# Get only macOS versions
+speedTruncation="$(echo "$macOSonly" | tr , '\n' | grep "ProductVersion" | sed '/iOS/q' | sed '$d' | awk -FProductVersion '{print $2}' | sed 's/"//g' | sed 's/://g')"
+# Get current OS
+currentos="$(defaults read /System/Library/CoreServices/SystemVersion.plist ProductVersion)"
+# Set variable if update is or is not available
+updatestatus=$(echo "$currentos" | grep -q "$speedTruncation" && echo "Up-to-date" || echo "Update available")
 
 # Default Check for update attempts
 CHECKUPDATEDEFAULT="8"
@@ -187,10 +202,16 @@ echo "Unable to check for updates at this time.\n\nCurrent versions installed:\n
 exit 20
 fi
 
-# Updates available - Warn if any updates are available
-if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+# Updates available - Email/ticket created if updates to the OS are available
+if [[ "$updatestatus" == *"Update available"* ]]; then
+echo "There are OS updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending"
 exit 2
+fi
+
+# Other updates available - Informational if any updates are available
+if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
+echo "There are other updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nPending updates:\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+exit 20
 fi
 
 # All good, nothing to see here.
