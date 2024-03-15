@@ -210,7 +210,7 @@ fi
 
 # Other updates available - Informational if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-echo "There are other updates available!\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+echo "There are other updates available!\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
 exit 20
 fi
 
