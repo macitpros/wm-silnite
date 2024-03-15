@@ -9,6 +9,14 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ### Note from Eclectic Light Company developer:
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
+## As of version .9.7.0.0
+* Uses curl to pull down current OS version information from https://gdmf.apple.com/v2/pmv
+	* Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/ for the excellent write up on how to get the latest OS version updates
+* Uses `curl` result to determine if the current OS matches on alerting for ticket/email (`exit 2`)
+* Will run OS version check during every run
+* Configuration Data related to XProtect/MRT/etc will continue to run according to schedule
+* Results for Configuration data will be an informational result (no ticket/email) in the Watchman Monitoring dashboard (`exit 20`)
+
 ## As of version .9.6.0.0
 * Requires silnite 10 to be installed
 * Creates a text file with results of a full run at `/Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt`
