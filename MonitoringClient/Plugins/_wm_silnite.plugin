@@ -116,10 +116,9 @@ fi
 
 # Finds if there are updates waiting.
 # If there are updates, will provide a list of available updates.
-UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
-if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
-PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
-fi
+#UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
+#if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
+#fi
 
 ## Malware Removal Tool
 # Finds MRT Version installed
@@ -204,12 +203,14 @@ fi
 
 # Updates available - Email/ticket created if updates to the OS are available
 if [[ "$updatestatus" == *"Update available"* ]]; then
+PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
 echo "There are OS updates available!\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
 exit 2
 fi
 
 # Other updates available - Informational if any updates are available
 if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
+PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
 echo "There are other updates available!\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
 exit 20
 fi
