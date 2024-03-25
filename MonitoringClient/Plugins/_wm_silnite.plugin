@@ -116,7 +116,7 @@ fi
 
 # Finds if there are updates waiting.
 # If there are updates, will provide a list of available updates.
-#UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
+UPDATESWAITING=$(echo "${SILNITE}" | grep UpdateWaiting)
 #if [[ "$UPDATESWAITING" == *"UpdateWaiting = 1"* ]]; then
 #fi
 
