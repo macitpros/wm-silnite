@@ -42,7 +42,7 @@ speedTruncation="$(echo "$macOSonly" | tr , '\n' | grep "ProductVersion" | sed '
 # Get current OS
 currentos="$(defaults read /System/Library/CoreServices/SystemVersion.plist ProductVersion)"
 # Set variable if update is or is not available
-updatestatus=$(echo $speedTruncation | grep -qx $currentos && echo "Up-to-date" || echo "Update available")
+updatestatus=$(echo "$speedTruncation" | grep -qx "$currentos" && echo "Up-to-date" || echo "Update available")
 
 # Default Check for update attempts
 CHECKUPDATEDEFAULT="8"
