@@ -42,7 +42,7 @@ speedTruncation="$(echo "$macOSonly" | tr , '\n' | grep "ProductVersion" | sed '
 # Get current OS
 currentos="$(defaults read /System/Library/CoreServices/SystemVersion.plist ProductVersion)"
 # Set variable if update is or is not available
-updatestatus=$(echo "$currentos" | grep -q "$speedTruncation" && echo "Up-to-date" || echo "Update available")
+updatestatus=$(echo "$speedTruncation" | grep -q "$currentos" && echo "Up-to-date" || echo "Update available")
 
 # Default Check for update attempts
 CHECKUPDATEDEFAULT="8"
@@ -110,7 +110,8 @@ SILNITE=$(cat /Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt)
 # Runs silnite as xml and gets the information to set as a variable
 if [[ "$SILNITE" == *"App Transport Security has blocked"* ]]; then
 # If there is not a connection run "bmx" mode.
-SILNITE="$(/usr/local/bin/silnite bmx)"
+/usr/local/bin/silnite bmx > /Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt
+SILNITE=$(cat /Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt)
 fi
 
 
