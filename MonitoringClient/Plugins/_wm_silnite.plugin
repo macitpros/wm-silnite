@@ -46,7 +46,7 @@ currentos="$(defaults read /System/Library/CoreServices/SystemVersion.plist Prod
 
 if [ -z "$softwareupdatelist" ]
 then
-	updatestatus=$("Unknown")
+	updatestatus=$(echo "Unknown")
 else
 	updatestatus=$(echo "$currentos" | grep -qx "$speedTruncation" && echo "Up-to-date" || echo "Update available")
 fi
