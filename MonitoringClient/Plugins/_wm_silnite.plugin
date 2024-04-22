@@ -204,7 +204,7 @@ fi
 
 # Informational if unable to curl current versions from gdmf.apple.com
 if [[ "$updatestatus" == *"Unknown"* ]]; then
-echo "Unable to check for updates (curl empty)\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\nRunning 'silnite au' from the computer (via Terminal/RMM/ARD) will show all available updates AND install any pending updates that do not require a restart."
+echo "Unable to check for updates (curl empty)\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent Run Count: $RUNCOUNT\nFull Run Frequency: $CHECKUPDATE\n\n$MRTRESULT\n$XPRRESULT\n$XPRESULT\n\n"
 exit 20
 fi
 
