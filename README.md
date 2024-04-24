@@ -9,6 +9,13 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ### Note from Eclectic Light Company developer:
 ```silnite uses the Swift standard frameworks. These are installed at a system level in later versions of Mojave (10.14.4 and later) and in Catalina (10.15). Those using earlier versions of Mojave (10.14.3 and before), Sierra or High Sierra may need to download and install Swift Runtime Support for Command Tools from https://support.apple.com/kb/DL1998```
 
+## As of version .9.7.1.0
+* New message for unable to check for updates will say: `Unable to check for updates (curl empty)` and exit as informational
+	* This message means the plugin ran when offline and was unable to `curl` the information from gdmf.apple.com (empty result)
+	<img width="951" alt="Capture_2024-04-23_12-31-43_PM" src="https://github.com/macitpros/wm-silnite/assets/17754199/03249627-058a-40a9-b0e7-b1739e88f959">
+* All clear now includes the current OS version in result
+<img width="964" alt="Capture_2024-04-23_12-33-24_PM" src="https://github.com/macitpros/wm-silnite/assets/17754199/a411f7d7-673e-4b0c-a3a1-bc11ab1c0956">
+
 ## As of version .9.7.0.0
 * Uses curl to pull down current OS version information from https://gdmf.apple.com/v2/pmv
 	* Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/ for the excellent write up on how to get the latest OS version updates
