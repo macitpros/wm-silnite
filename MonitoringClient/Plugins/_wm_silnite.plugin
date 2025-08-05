@@ -6,14 +6,23 @@
 
 # Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/
 # for the excellent write up on how to get the latest OS version updates.
-
 # Read existing settings file
 SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
 
-# OS Version Detection - used from https://www.sudoade.com/software-update-bugged-fact/
+# --- OS Version Detection ---
+# Choose one of the following methods to get the software update list.
+# By default, the script curls from Apple's servers.
+# To use a local file, comment out the curl command and uncomment the line below it.
+
+# Option 1: Get live data from Apple (default)
 softwareupdatelist="$(curl -m 5 -sfL 'https://gdmf.apple.com/v2/pmv')"
+
+# Option 2: Use a local text file for testing
+# softwareupdatelist=$(cat /Users/Shared/test/resultstest.txt)
+
+
 # Strip out all content before first mention of "macOS"
-macOSonly=${softwareupdatelist#*macOS} 
+macOSonly=${softwareupdatelist#*macOS}
 # Get only macOS versions
 speedTruncation="$(echo "$macOSonly" | tr , '\n' | grep "ProductVersion" | sed '/iOS/q' | sed '$d' | awk -FProductVersion '{print $2}' | sed 's/"//g' | sed 's/://g')"
 # Get current OS
@@ -26,40 +35,71 @@ CHECKUPDATEDEFAULT="1"
 
 	# Make sure the Preference Pane is visible
 	defaults write $SILSETTINGS PrefPaneVisibility true
-	
-	# Set correct permissions for settings file
+
+	# Set correct
+	# permissions for settings file
 	chmod 644 $SILSETTINGS
-	
+
 	# Reads current run count
 	RUNCOUNT="$(defaults read $SILSETTINGS Run_Count)"
-	
+
 	# Reads if this is the first run, which will force a full run
 	FIRSTRUN="$(defaults read $SILSETTINGS First_Run)"
 		[ -z "$FIRSTRUN" ] && defaults write $SILSETTINGS First_Run -bool true && chmod 644 $SILSETTINGS
-	
+
 	# Reads the number of times a warning (informational) alert was sent
 	WARNRUNCOUNT="$(defaults read $SILSETTINGS Unable_to_Check_Count)"
 		[ -z "$WARNRUNCOUNT" ] && defaults write $SILSETTINGS Unable_to_Check_Count 0 && chmod 644 $SILSETTINGS
-	
+
 	# Reads Check for Updates Setting
 	CHECKUPDATE="$(defaults read $SILSETTINGS Check_For_Updates)"
 		[ -z "$CHECKUPDATE" ] && defaults write $SILSETTINGS Check_For_Updates $CHECKUPDATEDEFAULT && chmod 644 $SILSETTINGS
-	
+
 	# Reads Warn Updates Setting
 	WARNATTEMPTS="$(defaults read $SILSETTINGS Warn_Updates_Attempts)"
 		[ -z "$WARNATTEMPTS" ] && defaults write $SILSETTINGS Warn_Updates_Attempts 2 && chmod 644 $SILSETTINGS
 
 
 # Updates available - Email/ticket created if updates to the OS are available
-if [[ "$updatestatus" == *"Update available"* ]]; then
-PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
-echo "There are OS updates available!\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent \n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
-exit 2
+if [[ "$updatestatus" == *"Update available"* ]];
+then
+    # Get the latest version string to find its release date
+    latest_version_str=$(echo "$speedTruncation" | head -n 1)
+
+    # Correctly parse the JSON to get the release date for the latest version.
+    # This is more reliable than the previous grep -A5 method.
+    version_line=$(echo "$macOSonly" | sed 's/},{/},\n{/g' | grep "\"ProductVersion\":\"$latest_version_str\"")
+    release_date_str=$(echo "$version_line" | sed -n 's/.*"PostingDate":"\([^"]*\)".*/\1/p')
+
+
+    if [ -n "$release_date_str" ]; then
+        # Convert release date and current date to seconds since epoch to compare
+        release_date_seconds=$(date -j -f "%Y-%m-%d" "$release_date_str" "+%s" 2>/dev/null)
+        current_date_seconds=$(date "+%s")
+
+        # If date conversion was successful, calculate the age of the update
+        if [ -n "$release_date_seconds" ]; then
+            days_since_release=$(( (current_date_seconds - release_date_seconds) / 86400 ))
+
+            PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
+
+            # If update is 7 days old or less, exit with informational status
+            if [ "$days_since_release" -le 7 ]; then
+                echo "There are OS updates available, released within the last 7 days.\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\n. Running Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
+                exit 20
+            fi
+        fi
+    fi
+
+    # If the release date can't be determined or if the update is older than 7 days, create a ticket.
+    PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
+    echo "There are OS updates available for more than 7 days!\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent \n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
+    exit 2
 fi
 
 # All good, nothing to see here.
 if [[ "$updatestatus" == *"Up-to-date"* ]]; then
-defaults write $SILSETTINGS Unable_to_Check_Count 0
-echo "All looks good. No pending updates. \n\nCurrent OS version: $currentos"
-exit 0
+    defaults write $SILSETTINGS Unable_to_Check_Count 0
+    echo "All looks good. No pending updates. \n\nCurrent OS version: $currentos"
+    exit 0
 fi
