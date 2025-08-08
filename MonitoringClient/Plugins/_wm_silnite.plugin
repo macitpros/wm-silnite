@@ -83,17 +83,17 @@ then
 
             PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
 
-            # If update is 7 days old or less, exit with informational status
-            if [ "$days_since_release" -le 7 ]; then
-                echo "There are OS updates available, released within the last 7 days.\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\n. Running Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
+            # If update is 8 days old or less, exit with informational status
+            if [ "$days_since_release" -le 8 ]; then
+                echo "There are OS updates available, released within the last 8 days. [Released on $release_date_str]\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\n Running Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
                 exit 20
             fi
         fi
     fi
 
-    # If the release date can't be determined or if the update is older than 7 days, create a ticket.
+    # If the release date can't be determined or if the update is older than 8 days, create a ticket.
     PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
-    echo "There are OS updates available for more than 7 days!\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent \n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
+    echo "There are OS updates available for more than 8 days! [Released on $release_date_str]\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent \n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
     exit 2
 fi
 
