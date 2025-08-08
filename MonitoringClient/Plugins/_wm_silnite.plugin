@@ -69,7 +69,7 @@ then
     # Correctly parse the JSON to get the release date for the latest version.
     # This is more reliable than the previous grep -A5 method.
     version_line=$(echo "$macOSonly" | sed 's/},{/},\n{/g' | grep "\"ProductVersion\":\"$latest_version_str\"")
-    release_date_str=$(echo "$version_line" | sed -n 's/.*"PostingDate":"\([^"]*\)".*/\1/p')
+    release_date_str=$(echo "$version_line" | sed -n 's/.*"PostingDate":"\([^"]*\)".*/\1/p' | head -n 1)
 
 
     if [ -n "$release_date_str" ]; then
