@@ -15,10 +15,11 @@ SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
 # To use a local file, comment out the curl command and uncomment the line below it.
 
 # Option 1: Get live data from Apple (default)
-softwareupdatelist="$(curl -m 5 -sfL 'https://gdmf.apple.com/v2/pmv')"
+# softwareupdatelist="$(curl -m 5 -sfL 'https://gdmf.apple.com/v2/pmv')"
 
-# Option 2: Use a local text file for testing
-# softwareupdatelist=$(cat /Users/Shared/test/resultstest.txt)
+# Uncomment line below to use SOFA to retrieve update info
+softwareupdatelist="$(curl -m 5 -sfL 'https://sofafeed.macadmins.io/v1/macos_data_feed.json')"
+
 
 
 # Strip out all content before first mention of "macOS"
@@ -69,7 +70,12 @@ then
     # Correctly parse the JSON to get the release date for the latest version.
     # This is more reliable than the previous grep -A5 method.
     version_line=$(echo "$macOSonly" | sed 's/},{/},\n{/g' | grep "\"ProductVersion\":\"$latest_version_str\"")
-    release_date_str=$(echo "$version_line" | sed -n 's/.*"PostingDate":"\([^"]*\)".*/\1/p' | head -n 1)
+    
+    ## Use "PostingDate" version if you're using Apple's site
+    # release_date_str=$(echo "$version_line" | sed -n 's/.*"PostingDate":"\([^"]*\)".*/\1/p' | head -n 1)
+    
+    ## Use "ReleaseDate" if using SOFA
+    release_date_str=$(echo "$version_line" | sed -n 's/.*"ReleaseDate":"\([^"]*\)".*/\1/p' | sed 's/T.*//')
 
 
     if [ -n "$release_date_str" ]; then
