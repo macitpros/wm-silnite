@@ -14,10 +14,10 @@ SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
 # By default, the script curls from Apple's servers.
 # To use a local file, comment out the curl command and uncomment the line below it.
 
-# Option 1: Get live data from Apple (default)
+## Get live data from Apple (default)
 # softwareupdatelist="$(curl -m 5 -sfL 'https://gdmf.apple.com/v2/pmv')"
 
-# Uncomment line below to use SOFA to retrieve update info
+## Uncomment line below to use SOFA to retrieve update info
 softwareupdatelist="$(curl -m 5 -sfL 'https://sofafeed.macadmins.io/v1/macos_data_feed.json')"
 
 
