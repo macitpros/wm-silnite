@@ -105,7 +105,7 @@ if [[ "$updatestatus" == "Update available" ]]; then
 
             # If update is 8 days old or less, exit with informational status
             if [ "$days_since_release" -le 8 ]; then
-                echo "There are OS updates available, released within the last 8 days. [Released on $release_date_str]\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\n Running Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
+                echo "There are OS updates available, released within the last 8 days.\nReleased on $release_date_str\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\n Running Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
                 exit 20
             fi
         fi
@@ -113,13 +113,13 @@ if [[ "$updatestatus" == "Update available" ]]; then
 
     # If the release date can't be determined or if the update is older than 8 days, create a ticket.
     PENDINGUPDATE="Pending Update: $(/usr/bin/defaults read /Library/Preferences/com.apple.SoftwareUpdate.plist RecommendedUpdates 2>/dev/null| grep "Display Name" | awk -F= '{print $2}' | sed 's/"//g' | sed 's/;//g')"
-    echo "There are OS updates available for more than 8 days! [Released on $release_date_str]\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nCurrent \n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
+    echo "There are OS updates available for more than 8 days!\nReleased on $release_date_str\n\nCurrent OS version: $currentos\n$PENDINGUPDATE\n\nRunning Software Update from System Settings/Preferences or pushing via an MDM will be required to install the update that is pending."
     exit 2
 fi
 
 # All good, nothing to see here.
 if [[ "$updatestatus" == "Up-to-date" ]]; then
     defaults write $SILSETTINGS Unable_to_Check_Count 0
-    echo "All looks good. No pending updates. \n\nCurrent OS version: $currentos \n\n Release Date: $release_date_str"
+    echo "All looks good. No pending updates.\nLatest Release Date: $release_date_str\n\nCurrent OS version: $currentos \n\n "
     exit 0
 fi
