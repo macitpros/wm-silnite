@@ -27,7 +27,7 @@ macOSonly=${softwareupdatelist#*macOS}
 # Get only macOS versions
 speedTruncation="$(echo "$macOSonly" | tr , '\n' | grep "ProductVersion" | sed '/iOS/q' | sed '$d' | awk -FProductVersion '{print $2}' | sed 's/"//g' | sed 's/://g')"
 # Get current OS
-currentos="$(defaults read /System/Library/CoreServices/SystemVersion.plist ProductVersion)"
+currentos="$(/usr/bin/sw_vers -productVersion)"
 # Set variable if update is or is not available
 updatestatus=$(echo "$currentos" | grep -q "$speedTruncation" && echo "Up-to-date" || echo "Update available")
 
