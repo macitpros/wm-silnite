@@ -46,7 +46,7 @@ if [[ -z "$model" ]]; then
 fi
 
 # Handle virtual machines
-if [[ $model == "VirtualMac"* ]]; then
+if [[ $model == "VirtualMac"* || $model == "Parallels"* ]]; then
     model="Macmini9,1" # Use a modern model for VMs
 elif ! grep -q "$model" "$json_cache"; then
     echo "Unsupported Hardware Model: $model. Exiting."
