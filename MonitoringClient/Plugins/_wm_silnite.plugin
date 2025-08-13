@@ -5,8 +5,8 @@
 # AUTHOR: DAN MONGE @MACITPROS
 # DATE:   AUG/11/2025
 
-# This script now uses the SOFA feed (by Graham Pugh) for more accurate, hardware-aware
-# OS version checking, while retaining the original script's alerting logic.
+# This script now uses the SOFA feed (by Graham Pugh) for more accurate, OS-aware
+# version checking, while retaining the original script's alerting logic.
 
 # --- Settings and Cache ---
 SILSETTINGS='/Library/MonitoringClient/PluginSupport/_wm_silnite_settings.plist'
@@ -34,24 +34,9 @@ else
     /usr/bin/curl --compressed --location --max-time 3 --silent --header "User-Agent: $user_agent" "$online_json_url" --etag-save "$etag_cache" --output "$json_cache"
 fi
 
-# --- OS Version and Hardware Detection ---
+# --- OS Version Detection ---
 # Autoload is-at-least module for version comparisons
 autoload is-at-least
-
-# Get model (DeviceID)
-model=$(/usr/sbin/sysctl -n hw.model)
-if [[ -z "$model" ]]; then
-    echo "Could not obtain hardware model. Exiting."
-    exit 20 # Exit with an error
-fi
-
-# Handle virtual machines
-if [[ $model == "VirtualMac"* || $model == "Parallels"* ]]; then
-    model="Macmini9,1" # Use a modern model for VMs
-elif ! grep -q "$model" "$json_cache"; then
-    echo "Unsupported Hardware Model: $model. Exiting."
-    exit 0 # Exit cleanly as we cannot determine status
-fi
 
 # Get current system OS version
 currentos=$(/usr/bin/sw_vers -productVersion)
@@ -64,22 +49,30 @@ if ! is-at-least 12 "$system_os_major"; then
 fi
 
 # --- Determine Update Status with SOFA Data ---
-# Find the latest OS compatible with this hardware model
-latest_compatible_os=$(/usr/bin/plutil -extract "Models.$model.SupportedOS.0" raw -expect string "$json_cache" | /usr/bin/head -n 1)
-
-# Find the latest product version for that compatible OS
+# Find the latest product version for the current major OS
 product_version=""
 release_date_str=""
 for i in {0..5}; do
-    os_version_from_feed=$(/usr/bin/plutil -extract "OSVersions.$i.OSVersion" raw "$json_cache" 2>/dev/null | /usr/bin/head -n 1)
-    if [[ "$os_version_from_feed" == "$latest_compatible_os" ]]; then
-        product_version=$(/usr/bin/plutil -extract "OSVersions.$i.Latest.ProductVersion" raw "$json_cache" | /usr/bin/head -n 1)
+    # Get the latest product version for the current OS in the feed
+    product_version_from_feed=$(/usr/bin/plutil -extract "OSVersions.$i.Latest.ProductVersion" raw "$json_cache" 2>/dev/null | /usr/bin/head -n 1)
+    
+    # Get the major version from the feed's product version
+    feed_os_major=$(cut -d. -f1 <<< "$product_version_from_feed")
+
+    # Check if it matches the system's current major OS version
+    if [[ "$feed_os_major" == "$system_os_major" ]]; then
+        product_version="$product_version_from_feed"
         # Get the release date for the day-counting logic, stripping the time
         release_date_str=$(/usr/bin/plutil -extract "OSVersions.$i.Latest.ReleaseDate" raw "$json_cache" | head -n 1 | sed 's/T.*//')
         break
     fi
 done
 
+# If no matching OS was found in the feed, exit cleanly
+if [[ -z "$product_version" ]]; then
+    echo "Could not determine latest version for macOS $system_os_major. Exiting."
+    exit 0
+fi
 # Set update status based on the comparison
 if is-at-least "$product_version" "$currentos"; then
     updatestatus="Up-to-date"
