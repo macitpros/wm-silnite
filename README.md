@@ -6,7 +6,7 @@ Alerting if specific Apple security updates have not been installed, or are avai
 ## As of version .9.9.2.0
 * No longer relies on `silnite` for any reporting.
 * Uses [Sofa](https://sofa.macadmins.io/getting-started.html) to determine if updates are available.
-*	[Based on this example](https://github.com/macadmins/sofa/blob/main/tool-scripts/macOSVersionCheck-EA.sh).
+	* [Based on this example](https://github.com/macadmins/sofa/blob/main/tool-scripts/macOSVersionCheck-EA.sh).
 * Simplified output to the dashboard.
 * Includes latest release date.
 * Informational warning (no ticket/email) if update was released within the last 8 days.
