@@ -5,9 +5,12 @@ Alerting if specific Apple security updates have not been installed, or are avai
 
 ## As of version .9.9.2.0
 * No longer relies on `silnite` for any reporting
-* Uses ![Sofa](https://sofa.macadmins.io/getting-started.html) to determine if updates are available.
+* Uses [Sofa](https://sofa.macadmins.io/getting-started.html) to determine if updates are available.
 * Simplified output to the dashboard
 * Includes latest release date
+* Informational warning (no ticket/email) if update was released within 8 days
+* Alert (ticket/email) if updates released after 8 days
+* Preference Pane/Settings removed 
 
 ## As of version .9.8.0.0
 * Removes the use of `silnite` binary and only relies on information curled from Apple
@@ -21,6 +24,8 @@ Alerting if specific Apple security updates have not been installed, or are avai
 * Will run OS version check during every run
 * Configuration Data related to XProtect/MRT/etc will continue to run according to schedule
 * Results for Configuration data will be an informational result (no ticket/email) in the Watchman Monitoring dashboard (`exit 20`)
+
+# No Longer Valid ¬
 
 ## As of version .9.6.0.0
 * Requires silnite 10 to be installed
@@ -49,6 +54,7 @@ Alerting if specific Apple security updates have not been installed, or are avai
 * Adds compatibility for silnite 6, which in turn adds compatibility with Apple Silicon and macOS 12. 
 * Get silnite version 6 from Eclectic Light: https://eclecticlight.co/lockrattler-systhist/
 * This version is NOT compatible with older versions of silnite. Requires silnite 6 to be installed.
+
 
 
 ## As of version .6.4.0:
