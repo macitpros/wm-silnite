@@ -4,38 +4,45 @@ Custom plugin for [Watchman Monitoring](https://www.watchmanmonitoring.com) to p
 Alerting if specific Apple security updates have not been installed, or are available for installation.
 
 ## As of version .9.9.2.0
-* No longer relies on `silnite` for any reporting
+* No longer relies on `silnite` for any reporting.
 * Uses [Sofa](https://sofa.macadmins.io/getting-started.html) to determine if updates are available.
-* Simplified output to the dashboard
-* Includes latest release date
-* Informational warning (no ticket/email) if update was released within 8 days
-* Alert (ticket/email) if updates released after 8 days
-* Preference Pane/Settings removed 
+*	[Based on this example](https://github.com/macadmins/sofa/blob/main/tool-scripts/macOSVersionCheck-EA.sh).
+* Simplified output to the dashboard.
+* Includes latest release date.
+* Informational warning (no ticket/email) if update was released within the last 8 days.
+* Alert (ticket/email) if update is pending and it has been longer than 8 days after release.
+* Preference Pane/Settings removed.
+
+### Informational Example (less than 8 days from release)
+<img width="586" height="235" alt="Image" src="https://github.com/user-attachments/assets/a1974674-25a0-4058-abd2-88cb1074052c" />
+
+### Alert Example (greater than 8 days after release)
+<img width="593" height="243" alt="Image" src="https://github.com/user-attachments/assets/298f087d-928a-4797-8a20-56ca676c0b13" />
 
 ## As of version .9.8.0.0
-* Removes the use of `silnite` binary and only relies on information curled from Apple
-* No longer reports MRT, XProtect, or XProtect Remediator information
-* No longer checks if SIP or XProtect is disabled
+* Removes the use of `silnite` binary and only relies on information curled from Apple.
+* No longer reports MRT, XProtect, or XProtect Remediator information.
+* No longer checks if SIP or XProtect is disabled.
 
 ## As of version .9.7.0.0
-* Uses curl to pull down current OS version information from https://gdmf.apple.com/v2/pmv
-	* Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/ for the excellent write up on how to get the latest OS version updates
-* Uses `curl` result to determine if the current OS matches on alerting for ticket/email (`exit 2`)
-* Will run OS version check during every run
-* Configuration Data related to XProtect/MRT/etc will continue to run according to schedule
-* Results for Configuration data will be an informational result (no ticket/email) in the Watchman Monitoring dashboard (`exit 20`)
+* Uses curl to pull down current OS version information from https://gdmf.apple.com/v2/pmv.
+	* Shout out to Ross Matsuda of https://www.sudoade.com/author/ross/ for the excellent write up on how to get the latest OS version updates.
+* Uses `curl` result to determine if the current OS matches on alerting for ticket/email (`exit 2`).
+* Will run OS version check during every run.
+* Configuration Data related to XProtect/MRT/etc will continue to run according to schedule.
+* Results for Configuration data will be an informational result (no ticket/email) in the Watchman Monitoring dashboard (`exit 20`).
 
 # No Longer Valid ¬
 
 ## As of version .9.6.0.0
 * Requires silnite 10 to be installed
 * Creates a text file with results of a full run at `/Library/MonitoringClient/PluginSupport/_wm_silnite_results.txt`
-* Will run an hourly _light_ run based off results file
-* Full run of `silnite` results will still be based off _Frequency to check for updates_... results file will be updated at that time
-* Fixes stale plugin results (now that data is sent during every run)
-* Added Run Count Information to Plugin results
-* Removes Gatekeeper Version reporting (results removed from silnite 10)
-* Adds XProtect Remediator Version reporting
+* Will run an hourly _light_ run based off results file.
+* Full run of `silnite` results will still be based off _Frequency to check for updates_... results file will be updated at that time.
+* Fixes stale plugin results (now that data is sent during every run).
+* Added Run Count Information to Plugin results.
+* Removes Gatekeeper Version reporting (results removed from silnite 10).
+* Adds XProtect Remediator Version reporting.
 
 <img width="935" alt="Capture_2023-11-09_08-27-55_AM" src="https://github.com/macitpros/wm-silnite/assets/17754199/89c1996f-3648-47bb-8cd7-0a5ea225e18c">
 
@@ -43,7 +50,7 @@ Alerting if specific Apple security updates have not been installed, or are avai
 * Uses `/Library/Preferences/com.apple.SoftwareUpdate.plist/Library/Preferences/com.apple.SoftwareUpdate.plist` for gathering list of recommended updates (stops using `softwareupdate -l`).
 * Adjusts if a plist setting file is missing an expected value.
 * Creates a default settings plist on new installation.
-* Changes default reporting frequency to 8 from 12 (more frequently)
+* Changes default reporting frequency to 8 from 12 (more frequently).
 
 ## As of version .9.0.1:
 * Simply a version bump to match current `silnite` binary version number
